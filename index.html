@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stock Analysis</title>
+    <link rel="stylesheet" type="text/css" href="chart.css"> 
+    <script src="https://d3js.org/d3.v4.min.js"></script>				
+    <script src="makeChart.js" charset="utf-8"></script>				
+</head>
+
+<body>
+
+<div class="slideshow_box">
+
+	<div class="slides fade">
+		<h1> Stock Market Indices: Performance Since 2019 </h1>
+		Since the beginning of 2019, major stock market indices have been exhibiting a general upward trend. <br>
+		Earlier this year from late February to late March, the stock market collapsed due to COVID-19, and major indices lost almost half of their values in a month. <br>
+		Since late March 2020, the stock market has started to recover. Major indices have recouped their losses and climbed even further than before the collapse. <br>
+		<br>
+		<font size="3" color="blue"> **Simply click on the legend at the bottom to add or remove indices on the interactive chart.** </font>
+		<div class="page_number">Page 1 of 3</div>
+		<div class="chart-wrapper" id="chart-line1"></div>
+	</div>
+
+	<div class="slides fade">
+		<h1> Stock Performance for Bank, Oil, Healthcare Sectors </h1>
+		The chart below contains stock price trends for the top 5 market cap stocks in the three sectors - Bank, Oil, and Healthcare. For clear visualization, only the best/worst performing stocks of each sector are set to visible at default. <br>
+		Despite the positive returns of the major indices since 2019, these sectors are not performing well. Bank Of America (BOA) was the best among these stocks before late February, but lost all of its 2019 gains due to the coronavirus outbreak. <br>
+		Then which sector is driving the increases of the stock indices? <br>
+		<br>
+		<font size="3" color="blue"> **Simply click on the legend at the bottom to add or remove stocks on the interactive chart.** </font><br>
+		<div class="page_number">Page 2 of 3</div>
+		<div class="chart-wrapper" id="chart-line2"></div>
+	</div>
+
+	<div class="slides fade">
+		 <h1> Tech Stocks Outperforming Indices and Stocks in Other Sectors </h1>
+		Tech stocks almost doubled in value during 2019.  <br>
+		Despite the Feb-Mar collapse earlier this year, tech stocks led the recovery of the stock market and is rallying further. <br>
+		This chart also contains historical data for the major indices and the best/worse performing stocks in each sector in the previous slide. For clear visualization, some lines are hidden at default. <br>
+		<br>
+		<font size="3" color="blue"> **Simply click on the legend at the bottom to add or remove stocks/indices on the interactive chart.** </font>
+		<div class="page_number">Page 3 of 3</div>
+		<div class="chart-wrapper" id="chart-line3"></div>
+	</div>
+
+
+	<a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+	<a class="next" onclick="plusSlides(1)">&#10095;</a>
+
+</div>
+<br>
+
+<div style="text-align:center">
+	<span class="dot" onclick="currentSlide(1)"></span>
+	<span class="dot" onclick="currentSlide(2)"></span>
+	<span class="dot" onclick="currentSlide(3)"></span>
+</div>
+
+<br>
+
+
+
+<script type="text/javascript">
+
+	var slideIndex = 1;
+	showSlides(slideIndex);
+
+	function plusSlides(n) {
+	  showSlides(slideIndex += n);
+	}
+
+	function currentSlide(n) {
+	  showSlides(slideIndex = n);
+	}
+
+	function showSlides(n) {
+	  var i;
+	  var slides = document.getElementsByClassName("slides");
+	  var dots = document.getElementsByClassName("dot");
+	  if (n > slides.length) {slideIndex = 1}
+	  if (n < 1) {slideIndex = slides.length}
+	  for (i = 0; i < slides.length; i++) {
+	      slides[i].style.display = "none";
+	  }
+	  for (i = 0; i < dots.length; i++) {
+	      dots[i].className = dots[i].className.replace(" dot_active", "");
+	  }
+	  slides[slideIndex-1].style.display = "block";
+	  dots[slideIndex-1].className += " dot_active";
+	} 
+
+	var parseTime = d3.timeParse("%d/%m/%Y");
+
+	// 1
+	var chart1_annotations = [{ x: new Date('02/19/2020'), y: 1.55, y0: 1.45, asset: 'NASDAQ',  text: '02/19/2019: NASDAQ achieved a 47% return. Stock market collapsed due to COVID-19.', orient: 'left' },
+								{ x: new Date('03/20/2020'), y: 0.80, y0: 0.75, asset: 'Russell2000',  text: '03/20/2020: Russell2000 suffered a cumulative loss of 25%. Stock market started to recover.', orient: 'left' }];							
+	var chart1_axisLabel =  {xAxis: 'Date', yAxis: 'Asset Value Assuming a $1 Investment At the Beginning'};
+	var chart1_variables = {'SP500': {column: 'SP500', visible: true},
+							'DowJones': {column: 'DowJones', visible: true},
+							'NASDAQ': {column: 'NASDAQ', visible: true},
+							'Russell2000': {column: 'Russell2000', visible: true}
+							}
+
+	// 2
+	var chart2_annotations = [{ x: new Date('01/02/2020'), y: 1.33, y0: 1.43, asset: 'BOA', text: 'BOA set a record return of 43% before its collapse.', orient: 'left' },
+								{ x: new Date('02/20/2020'), y: 0.75, y0: 1,  asset: 'Chevron',text: '2/20/2020: All stocks plummet on coronavirus concerns.', orient: 'left' }
+								];
+	var chart2_axisLabel =  {xAxis: 'Date', yAxis: 'Asset Value Assuming a $1 Investment At the Beginning'};
+	var chart2_variables = {'JPMorgan': {column: 'JPMorgan', visible: false},
+							'BOA': {column: 'BOA', visible: true},
+							'WellsFargo': {column: 'WellsFargo', visible: true},
+							'Citi': {column: 'Citi', visible: false},
+							'UBS': {column: 'UBS', visible: false},
+							'Exxon': {column: 'Exxon', visible: false},
+							'Chevron': {column: 'Chevron', visible: true},
+							'Conocophillips': {column: 'Conocophillips', visible: false},
+							'EOG': {column: 'EOG', visible: false},
+							'Occidental': {column: 'Occidental', visible: true},
+							'Pfizer': {column: 'Pfizer', visible: true},
+							'Novartis': {column: 'Novartis', visible: false},
+							'Merck': {column: 'Merck', visible: false},
+							'Johnson': {column: 'Johnson', visible: true},
+							'Roche': {column: 'Roche', visible: false}
+							}
+
+	// 3
+	var chart3_axisLabel =  {xAxis: 'Date', yAxis: 'Asset Value Assuming a $1 Investment At the Beginning'};
+	var chart3_variables = {'Google': {column: 'Google', visible: true}, 
+							'Amazon': {column: 'Amazon', visible: true}, 
+							'Microsoft': {column: 'Microsoft', visible: true}, 
+							'Apple': {column: 'Apple', visible: true},
+							'Facebook': {column: 'Facebook', visible: true},
+							'BOA': {column: 'BOA', visible: true},
+							'WellsFargo': {column: 'WellsFargo', visible: false},
+							'Chevron': {column: 'Chevron', visible: true},
+							'Occidental': {column: 'Occidental', visible: false},
+							'Johnson': {column: 'Johnson', visible: false},
+							'Pfizer': {column: 'Pfizer', visible: false},
+							'SP500': {column: 'SP500', visible: false},
+							'DowJones': {column: 'DowJones', visible: false},
+							'NASDAQ': {column: 'NASDAQ', visible: true},
+							'Russell2000': {column: 'Russell2000', visible: true}
+						}
+
+	// Load csv
+    d3.csv('stocks_preprocessed.csv')
+    	.row(function(d){
+		 	return {
+		 		date:parseTime(d.Date), 
+		 		Google: +d.Google,
+		 		Amazon: +d.Amazon,
+		 		Microsoft: +d.Microsoft,
+		 		Apple: +d.Apple,
+		 		Facebook: +d.Facebook,
+		 		JPMorgan: +d.JPMorgan,
+		 		BOA: +d.BOA,
+		 		WellsFargo: + d.WellsFargo,
+		 		Citi: +d.Citi,
+		 		UBS: +d.UBS,
+		 		Exxon: +d.Exxon,
+		 		Chevron: +d.Chevron,
+		 		Conocophillips: +d.Conocophillips,
+		 		EOG: +d.EOG,
+		 		Occidental: +d.Occidental,
+		 		Pfizer: +d.Pfizer,
+		 		Novartis: +d.Novartis,
+		 		Merck: +d.Merck,
+		 		Johnson: +d.Johnson,
+		 		Roche: +d.Roche,
+		 		SP500: +d.SP500,
+		 		DowJones: +d.DowJones,
+		 		NASDAQ: +d.NASDAQ,
+		 		Russell2000: +d.Russell2000
+		 	};
+		})
+		.get(function(error, data){
+
+		    var chart1 = makeLineChart(data, 'date', chart1_variables, chart1_annotations);
+		    chart1.bind({selector:"#chart-line1", axisLabels: chart1_axisLabel});
+		    chart1.render(); 
+
+		    var chart2 = makeLineChart(data, 'date', chart2_variables,  chart2_annotations);
+		    chart2.bind({selector:"#chart-line2", axisLabels: chart2_axisLabel});
+		    chart2.render();
+
+		    var chart3 = makeLineChart(data, 'date', chart3_variables);
+		    chart3.bind({selector:"#chart-line3", axisLabels: chart3_axisLabel});
+		    chart3.render();
+
+		});
+
+</script>
+
+
+</body>
+
+
+</html>
